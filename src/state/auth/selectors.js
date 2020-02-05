@@ -49,6 +49,6 @@ export function userFullName(state) {
     auth: { user = {} },
   } = state;
   return {
-    userFullName: `${user.firstName} ${user.lastName}`.trim(),
+    userFullName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
   };
 }

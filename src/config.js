@@ -26,6 +26,8 @@ const __PROD__ = window.location.hostname === REACT_APP_PROD_HOSTNAME;
 
 /** Base URL of the API. */
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+/** URL to the company website. */
+const REACT_APP_COMPANY_SITE_URL = process.env.REACT_APP_COMPANY_SITE_URL;
 /** DSN URL for the error telemetry API. */
 const REACT_APP_ERRORS_DSN = process.env.REACT_APP_ERRORS_DSN;
 /** True to report errors during development. */
@@ -42,6 +44,7 @@ export {
   __PROD__,
   NODE_ENV,
   REACT_APP_API_URL,
+  REACT_APP_COMPANY_SITE_URL,
   REACT_APP_ERRORS_DSN,
   REACT_APP_ERRORS_DEV,
   REACT_APP_PERSIST_KEY,
