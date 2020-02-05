@@ -1,4 +1,8 @@
+# React Material App
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+It uses the [Material UI](https://material-ui.com/) framework.
 
 ## Available Scripts
 
