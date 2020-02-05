@@ -1,4 +1,5 @@
 import React from "react";
+import { useMediaQuery } from "@material-ui/core";
 
 /**
  * State reducer hook for editing objects by id.
@@ -210,6 +211,10 @@ export function useInputTargetValue(defaultValue = "", options) {
     valueFrom: "target",
     ...options,
   });
+}
+/** Returns `true` if the PWA is installed and running in standalone mode. */
+export function useInstalledPWA() {
+  return useMediaQuery("(display-mode: standalone)");
 }
 /** Hook that defaults to a blank object, returns a function used to
  * do partial updates of the object state as well as a third function to
