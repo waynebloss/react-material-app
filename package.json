@@ -24,6 +24,7 @@
     "array-move": "^2.2.1",
     "axios": "^0.19.2",
     "clsx": "^1.1.0",
+    "core-js": "^3.6.4",
     "date-fns": "^2.0.0",
     "dot-prop-immutable": "^2.1.0",
     "history": "^4.10.1",
