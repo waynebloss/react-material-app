@@ -36,7 +36,13 @@ function _LoginPage({
   const isMobile = useMobile();
 
   let titleText = "Welcome";
-  let subtitleText = "Enter your details below.";
+  let subtitleText = (
+    <>
+      Enter your details below.
+      <br />
+      Any credentials that follow the validation rules will work in this demo.
+    </>
+  );
   if (reset) {
     titleText = "Your password was reset!";
     subtitleText = "Sign in again and you're good to go.";

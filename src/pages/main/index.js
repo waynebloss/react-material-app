@@ -3,7 +3,7 @@ import { NotFoundPage } from "./NotFoundPage";
 
 export const MainPages = {
   home: {
-    anon: true,
+    anon: false,
     path: "/",
     title: "Home",
     type: "PAGE_HOME",

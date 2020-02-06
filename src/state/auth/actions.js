@@ -1,5 +1,5 @@
 import {
-  authPost,
+  // authPost,
   setAuthRequestToken,
   removeAuthRequestToken,
 } from "../../lib";
@@ -19,11 +19,17 @@ export const AuthActions = {
 
   confirmAccount({ email, token, password1, password2 }) {
     return async dispatch => {
-      const response = await authPost("/api/auth/confirm", {
-        email,
-        newPassword: password1,
-        token,
+      // const response = await authPost("/api/auth/confirm", {
+      //   email,
+      //   newPassword: password1,
+      //   token,
+      // });
+      // TODO: Make ajax call as shown above and delete mock response below.
+      const response = await Promise.resolve({
+        error: undefined,
+        data: {},
       });
+
       const { error } = response;
       return {
         error,
@@ -33,8 +39,13 @@ export const AuthActions = {
 
   forgotPassword({ email }) {
     return async dispatch => {
-      const response = await authPost("/api/auth/password/forgot", {
-        email,
+      // const response = await authPost("/api/auth/password/forgot", {
+      //   email,
+      // });
+      // TODO: Make ajax call as shown above and delete mock response below.
+      const response = await Promise.resolve({
+        error: undefined,
+        data: {},
       });
       return response;
     };
@@ -44,9 +55,26 @@ export const AuthActions = {
     return async dispatch => {
       dispatch({ type: type.LOGIN_REQUEST });
       dispatch(UIActions.setUILoading(true));
-      const response = await authPost("/api/auth/login", {
-        userName: email,
-        password,
+      // const response = await authPost("/api/auth/login", {
+      //   userName: email,
+      //   password,
+      // });
+      // TODO: Make ajax call as shown above and delete mock response below.
+      const response = await Promise.resolve({
+        error: undefined,
+        data: {
+          // Mock token created at https://jwt.io/
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzciLCJuYW1lIjoic2FtcGxldXNlckBzYW1wbGVjb21wYW55LmNvbSIsImlhdCI6MTUxNjIzOTAyMiwicm9sZXMiOlsidXNlciJdfQ.Jy5RtExl6b1mwKMWpd9jIIV9v2JZhicb8SCeSYVTZ7s",
+          expiration: new Date(
+            new Date().getFullYear() + 1,
+            0,
+            1,
+          ).toISOString(),
+          email: "demouser@gmail.com",
+          company: { id: 999, name: "Demo Company" },
+          user: { id: 777, firstName: "Demo", lastName: "User" },
+        },
       });
       const { error } = response;
       if (error) {
@@ -85,7 +113,7 @@ export const AuthActions = {
       // CONSIDER: Tell the server that we're logging out so it can blacklist
       // the token until it expires...
       // const response = await authPost("/logout");
-
+      // TODO: Make ajax call as shown above or delete mock response below.
       const response = await Promise.resolve({
         error: undefined,
         data: {},
@@ -99,10 +127,15 @@ export const AuthActions = {
 
   resetPassword({ email, token, password1, password2 }) {
     return async dispatch => {
-      const response = await authPost("/api/auth/password/reset", {
-        email,
-        newPassword: password1,
-        token,
+      // const response = await authPost("/api/auth/password/reset", {
+      //   email,
+      //   newPassword: password1,
+      //   token,
+      // });
+      // TODO: Make ajax call as shown above and delete mock response below.
+      const response = await Promise.resolve({
+        error: undefined,
+        data: {},
       });
       const { error } = response;
       return {

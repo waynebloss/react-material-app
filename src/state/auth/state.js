@@ -3,13 +3,13 @@ import { AuthActions } from "./actions";
  * Authentication / Authorization state (**persisted**).
  * @example
  * {
- *  email: "sample.user@samplecompany.com",
+ *  email: "demouser@gmail.com",
  *  token: "xxx-yyy-zzz",
  *  expiration: "2020-09-17T13:41:08Z",
- *  company: { id: 999, name: "Sample Company" },
+ *  company: { id: 999, name: "Demo Company" },
  *  user: {
  *   id: 123,
- *   firstName: "Sample",
+ *   firstName: "Demo",
  *   lastName: "User",
  *  },
  * }
