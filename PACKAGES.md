@@ -7,7 +7,8 @@ being used.
 
 ## Status
 
-Status of running `yarn outdated` as of 02/05/2020.
+Status of running `yarn outdated` as of 02/05/2020. See
+[Upgrade Decisions](#upgrade-decisions) below.
 
 ```console
 Package                     Current Wanted Latest
@@ -21,6 +22,8 @@ redux-persist               5.10.0  5.10.0 6.0.0
 
 ## Upgrade Decisions
 
+---
+
 ## @date-io/date-fns
 
 Staying on `^1.3.0` since that is the exact devDependency used by package
@@ -29,7 +32,7 @@ See [github.com](https://github.com/mui-org/material-ui-pickers/blob/v3.2.10/lib
 
 ## @testing-library/jest-dom and @testing-library/user-event
 
-These were setup by create-react-app. Do not upgrade until an upgrade to 
+These were setup by create-react-app. Do not upgrade until an upgrade to
 create-react-app instructs the developer to do so.
 
 ### path-to-regexp
@@ -51,3 +54,21 @@ browsers":
 ### redux-persist
 
 Staying on `5.10.0` for now since `6.0.0` is too new; needs to be tested...
+
+## Warnings When Installing Packages
+
+---
+
+> warning "react-scripts > eslint-config-react-app@5.2.0" has incorrect peer dependency "eslint-plugin-flowtype@3.x".
+
+- caused by `react-scripts`, not our code.
+
+> warning "react-scripts > @typescript-eslint/eslint-plugin > tsutils@3.17.1" has unmet peer dependency "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta".
+
+- Typescript is optional for `react-scripts`. To enable it you install
+  `typescript` which would fix this warning.
+
+> warning " > @testing-library/user-event@7.2.1" has unmet peer dependency "@testing-library/dom@>=5"
+
+- The `@testing-library/user-event` was installed by `npx create-react-app` so,
+  don't worry about this warning until if/when you need it for automated tests.
