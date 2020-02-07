@@ -1,4 +1,5 @@
-import { UIActions } from "./actions";
+import { createSlice } from "@reduxjs/toolkit";
+
 /**
  * UI state (**NOT** persisted).
  * @example
@@ -7,30 +8,54 @@ import { UIActions } from "./actions";
  *    notification: { duration: number, message: string, variant: "" | "error" }
  * }
  */
-export const UIState = {
+const ui = createSlice({
   name: "ui",
-  persist: false,
-  defaults: {
+  initialState: {
     loading: false,
   },
-  handlers: {
-    [UIActions.type.UI_LOADING_SET](state, { value }) {
-      return {
-        ...state,
-        loading: value,
-      };
+  reducers: {
+    setUILoading(state, { payload }) {
+      state.loading = payload;
     },
-    [UIActions.type.UI_NOTIFICATION_HIDE](state) {
-      return {
-        ...state,
-        notification: undefined,
-      };
+    hideNotification(state) {
+      state.notification = undefined;
     },
-    [UIActions.type.UI_NOTIFICATION_SHOW](state, { type, ...notification }) {
-      return {
-        ...state,
-        notification,
-      };
+    showNotification: {
+      reducer(state, { payload }) {
+        state.notification = payload;
+      },
+      prepare(message, variant, duration) {
+        if (duration === undefined && variant !== "error") {
+          duration = 15000;
+        }
+        return {
+          message,
+          duration,
+          variant,
+        };
+      },
     },
   },
+});
+// ui.persist = false;
+
+const { setUILoading, hideNotification, showNotification } = ui.actions;
+
+export const UIActions = {
+  setUILoading,
+  hideNotification,
+  showNotification,
+
+  showError(message = "There was an error processing your request.") {
+    return showNotification(message, "error");
+  },
+
+  showUpdated(message = "Your changes have been submitted.") {
+    return showNotification(message);
+  },
+};
+
+export const UIState = {
+  ...ui,
+  persist: false,
 };

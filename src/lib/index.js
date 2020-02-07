@@ -10,7 +10,6 @@
 // Files not exported:
 //
 // export * from "./async";         // Only currently used in ./routing/.
-// export * from "./reducers";      // Only used to setup redux.
 //
 // #endregion
 

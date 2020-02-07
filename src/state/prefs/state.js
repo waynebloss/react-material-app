@@ -1,5 +1,11 @@
-import { AuthActions } from "../auth/actions";
-import { PrefActions } from "./actions";
+import { createSlice } from "@reduxjs/toolkit";
+// Local
+import { AuthActions } from "../auth/state";
+
+const initialState = {
+  hidePay: true,
+  hideInfo: true,
+};
 /**
  * Preferences state (**persisted**).
  * @example
@@ -8,22 +14,39 @@ import { PrefActions } from "./actions";
  *    hideInfo: true,
  * }
  */
-export const PrefState = {
+const prefs = createSlice({
   name: "prefs",
-  persist: true,
-  defaults: {
-    hidePay: true,
-    hideInfo: true,
-  },
-  handlers: {
-    [AuthActions.type.LOGOUT_SUCCESS](state, action) {
-      return PrefState.defaults;
-    },
-    [PrefActions.type.PREFS_UPDATE](state, { type, ...prefs }) {
+  initialState,
+  reducers: {
+    updatePrefs(state, { payload }) {
       return {
         ...state,
-        ...prefs,
+        ...payload,
       };
     },
   },
+  extraReducers: {
+    [AuthActions.loggedOut]() {
+      return initialState;
+    },
+  },
+});
+
+const { updatePrefs } = prefs.actions;
+
+export const PrefsActions = {
+  updatePrefs,
+  /** @param {boolean} hideInfo */
+  updateHideInfo(hideInfo) {
+    return updatePrefs({ hideInfo });
+  },
+  /** @param {boolean} hidePay */
+  updateHidePay(hidePay) {
+    return updatePrefs({ hidePay });
+  },
+};
+
+export const PrefState = {
+  ...prefs,
+  persist: true,
 };

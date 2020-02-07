@@ -4,13 +4,13 @@ import { UIState } from "./ui/state";
 
 // Export Actions, Selectors
 
-export * from "./auth/actions";
+export * from "./auth/state";
 export * from "./auth/selectors";
 
-export * from "./prefs/actions";
+export * from "./prefs/state";
 export * from "./prefs/selectors";
 
-export * from "./ui/actions";
+export * from "./ui/state";
 export * from "./ui/selectors";
 
 export default [
