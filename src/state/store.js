@@ -9,30 +9,42 @@ import storage from "redux-persist/lib/storage";
 import { __DEV__, REACT_APP_PERSIST_KEY } from "../config";
 import appStates from "./states";
 
-// Preload state
-// This is only possible since we're using localStorage which we can access
-// synchronously. It's simpler than using `redux-persist/PersistGate`.
-const persistKey = REACT_APP_PERSIST_KEY || "app";
-const storageKey = `${KEY_PREFIX}${persistKey}`;
-const storageValue = localStorage.getItem(storageKey);
-const storageObject = storageValue ? JSON.parse(storageValue) : undefined;
 
 // Map appState reducers.
 const reducerMap = (function mapStates() {
+  /** Slice names to purge from storage when `purgeStore` is called. */
   const defaultPurgeKeys = [];
+  /** Slice names to prevent from storage. */
   const noPersist = [];
+  /** Each sub-reducer function by slice name. */
   const reducers = {};
+  /** States preloaded from localStorage by slice name. */
   let preloadedState;
 
-  appStates.forEach(reducerSpec => {
-    const { name, persist: shouldPersist, purge: shouldPurge } = reducerSpec;
+  // Preload state
+  const storageObject = (function preloadState() {
+    // This is only possible since we're using localStorage which we can access
+    // synchronously. It's simpler than using `redux-persist/PersistGate`.
+    const persistKey = REACT_APP_PERSIST_KEY || "app";
+    const storageKey = `${KEY_PREFIX}${persistKey}`;
+    const storageValue = localStorage.getItem(storageKey);
+    return storageValue ? JSON.parse(storageValue) : undefined;
+  })();
+
+  appStates.forEach(appState => {
+    const {
+      name,
+      persist: shouldPersist = false,
+      preload: shouldPreload = true,
+      purge: shouldPurge = true,
+    } = appState;
     if (!shouldPersist) {
       noPersist.push(name);
-    } else if (storageObject && storageObject[name]) {
+    } else if (shouldPreload && storageObject && storageObject[name]) {
       if (preloadedState === undefined) preloadedState = {};
       preloadedState[name] = JSON.parse(storageObject[name]);
     }
-    if (shouldPurge || (shouldPurge === undefined && shouldPersist)) {
+    if (shouldPurge && shouldPersist) {
       defaultPurgeKeys.push(name);
     }
     reducers[name] = reducerSpec.reducer;
