@@ -1,6 +1,10 @@
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
-import { persistCombineReducers, persistStore } from "redux-persist";
+import {
+  KEY_PREFIX,
+  persistCombineReducers,
+  persistStore,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 // #region Optional Imports - If enabled, uncomment related code as well.
@@ -9,26 +13,74 @@ import thunk from "redux-thunk";
 // import crossTabSync from "redux-persist-crosstab";
 //
 // #endregion
-import { mapReducersOf } from "../lib/reducers";
+// Local
+import { __DEV__, REACT_APP_PERSIST_KEY } from "../config";
 import appStates from "./states";
 
-// #region Redux Setup Notes
-//
-// ## Feature middleware, then core middleware
-// - https://github.com/thinking-in-redux/thinking-in-redux-book-samples/blob/07_naming_conventions_and_project_structure/src/redux/store.js
-//
-// ## Redux-thunk middleware should probably be last, but before logger
-// - https://github.com/reduxjs/redux-thunk/issues/134
-// - https://github.com/evgenyrodionov/redux-logger#usage
-//
-// ## Redux-persist v5 example setup at:
-// https://github.com/rt2zz/redux-persist/issues/99#issuecomment-340224008
-// ...
-// #endregion
+/** Returns a `reducer` function from the `handlers` property of the given
+ * `reducerSpec`.
+ * @param {ReducerSpec} reducerSpec
+ * @returns {Reducer}
+ */
+function reducerOf(reducerSpec) {
+  const { defaults = {}, handlers = {}, reducer } = reducerSpec;
+  if (reducer) return reducer;
+  function autoReducer(state, action) {
+    const actionType = action.type;
+    const handler = handlers[actionType];
+    if (!handler) return state || defaults;
+    return handler(state, action);
+  }
+  return autoReducer;
+}
 
-const __DEV__ = process.env.NODE_ENV === "development";
-/** Map of reducer meta-data and reducer functions. */
-const reducerMap = mapReducersOf(appStates);
+/** Map of appState reducers. */
+const reducerMap = (function mapStates() {
+  /** Slice names to purge from storage when `purgeStore` is called. */
+  const defaultPurgeKeys = [];
+  /** Slice names to prevent from storage. */
+  const noPersist = [];
+  /** Each sub-reducer function by slice name. */
+  const reducers = {};
+  /** States preloaded from localStorage by slice name. */
+  let preloadedState;
+
+  // Preload state
+  const storageObject = (function preloadState() {
+    // This is only possible since we're using localStorage which we can access
+    // synchronously. It's simpler than using `redux-persist/PersistGate`.
+    const persistKey = REACT_APP_PERSIST_KEY || "app";
+    const storageKey = `${KEY_PREFIX}${persistKey}`;
+    const storageValue = localStorage.getItem(storageKey);
+    return storageValue ? JSON.parse(storageValue) : undefined;
+  })();
+
+  appStates.forEach(appState => {
+    const {
+      name,
+      persist: shouldPersist = false,
+      preload: shouldPreload = true,
+      purge: shouldPurge = true,
+    } = appState;
+    if (!shouldPersist) {
+      noPersist.push(name);
+    } else if (shouldPreload && storageObject && storageObject[name]) {
+      if (preloadedState === undefined) preloadedState = {};
+      preloadedState[name] = JSON.parse(storageObject[name]);
+    }
+    if (shouldPurge && shouldPersist) {
+      defaultPurgeKeys.push(name);
+    }
+    reducers[name] = reducerOf(appState);
+  });
+  return {
+    defaultPurgeKeys,
+    noPersist,
+    reducers,
+    preloadedState,
+  };
+})();
+
 /** Configuration to persist the store to localStorage. */
 const persistConfig = {
   blacklist: reducerMap.noPersist,
@@ -36,12 +88,9 @@ const persistConfig = {
   key: process.env.REACT_APP_PERSIST_KEY || "reduxPersist",
   storage,
 };
+
 /** The main reducer that calls all other reducers. */
 const rootReducer = persistCombineReducers(persistConfig, reducerMap.reducers);
-/** The current redux persistor.
- * @type {import('redux-persist').Persistor}
- */
-let persistor;
 
 function composeStoreEnhancer(config) {
   const { logger, middlewares, thunk } = config;
@@ -74,16 +123,6 @@ function composeStoreEnhancer(config) {
     middlewareEnhancer,
   );
   // #endregion
-  // #region CONSIDER: Buffer actions until rehydrate occurs.
-  // Right now I don't think we're having any issues [1, 2] by NOT buffering,
-  // since we preload the state manually (so the *initial* rehydrate doesn't
-  // cause any changes in the state...)
-  // NOTE: We just upgraded to redux-persist v5, so this concern might no longer
-  // be applicable.
-  // SEE ALSO: PersistGate from redux-persist.
-  // [1] https://github.com/rt2zz/redux-persist/issues/226
-  // [2] https://github.com/rt2zz/redux-persist/issues/189
-  // #endregion
 }
 
 const storeEnhancer = composeStoreEnhancer({
@@ -98,25 +137,16 @@ const storeEnhancer = composeStoreEnhancer({
   // ],
 });
 
-/** Starts the process of persisting and syncing the store. */
-export function activateStore() {
-  function activatingStore(resolve, reject) {
-    function persistStoreCompleted() {
-      resolve(store);
-    }
-    persistor = persistStore(store, null, persistStoreCompleted);
-    // Import from "redux-persist-crosstab" to use this:
-    // crossTabSync(store, persistConfig);
-  }
-  return new Promise(activatingStore);
-}
-
 export const store = createStore(
   rootReducer,
   reducerMap.preloadedState,
   storeEnhancer,
 );
 export default store;
+
+export const persistor = persistStore(store);
+// Optional import:
+// crossTabSync(store, persistConfig);
 
 /** Purge persisted store state of the given `keys`.
  * **If no `keys` are passed, ALL states specced with `purge:true` are purged.**
@@ -125,3 +155,16 @@ export default store;
 export function purgeStore(keys = reducerMap.defaultPurgeKeys) {
   persistor.purge(keys);
 }
+
+/**
+ * @typedef {(state: StateObj, action: ActionObj)=> StateObj} Reducer Redux
+ * reducer function.
+ *
+ * @typedef {object} ReducerSpec Specification for creating a Redux reducer from
+ * an object.
+ * @property {StateObj} [defaults] The default values for reducer to return.
+ * @property {{[ACTION_TYPE: string]: ()=> Reducer}} [handlers]
+ * @property {Reducer} [reducer] A reducer to use instead of creating one from
+ * `handlers`.
+ *
+ */

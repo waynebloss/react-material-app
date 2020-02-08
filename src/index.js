@@ -17,7 +17,7 @@ import { REACT_APP_SITE_TITLE } from "./config";
 import { ErrorSentry } from "./components";
 import { AppRouter, hasAuthRequestToken, setAuthRequestToken } from "./lib";
 import { AppArea } from "./pages";
-import { activateStore, store } from "./state/store";
+import { store } from "./state/store";
 
 // Example to use service worker / progressive web app (PWA):
 // import * as serviceWorker from "./serviceWorker";
@@ -72,12 +72,10 @@ AppRouter.configure({
  * Startup function.
  *
  * NOTE: The `store` already comes preloaded with data since `state/store.js`
- * does that. However, if that were to change, we could `await activateStore()`
- * and then call `preloadAuthToken()`.
+ * does that.
  */
 function main() {
   preloadAuthToken();
-  activateStore();
   render();
   registerServiceWorker();
 }
