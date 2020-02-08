@@ -7,7 +7,7 @@ being used.
 
 ## Status
 
-Status of running `yarn outdated` as of 02/05/2020. See
+Status of running `yarn outdated` as of 02/07/2020. See
 [Upgrade Decisions](#upgrade-decisions) below.
 
 ```console
@@ -17,7 +17,6 @@ Package                     Current Wanted Latest
 @testing-library/user-event 7.2.1   7.2.1  8.1.0
 path-to-regexp              1.8.0   1.8.0  6.1.0
 query-string                5.1.1   5.1.1  6.10.1
-redux-persist               5.10.0  5.10.0 6.0.0
 ```
 
 ## Upgrade Decisions
@@ -50,10 +49,6 @@ browsers":
 > This module targets Node.js 6 or later and the latest version of Chrome,
 > Firefox, and Safari. If you want support for older browsers, use version 5:
 > `npm install query-string@5.` - [sindresorhus/query-string](https://github.com/sindresorhus/query-string#install)
-
-### redux-persist
-
-Staying on `5.10.0` for now since `6.0.0` is too new; needs to be tested...
 
 ## Warnings When Installing Packages
 
