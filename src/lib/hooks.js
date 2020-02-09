@@ -1,5 +1,7 @@
 import React from "react";
 import { useMediaQuery } from "@material-ui/core";
+// Local
+import { debounce } from "./utils";
 
 /**
  * State reducer hook for editing objects by id.
@@ -147,6 +149,49 @@ export function useInputCheck(defaultValue = false, options) {
   });
 }
 /**
+ * Hook that returns an input value, debounced value, `onChange` handler and a
+ * value setter.
+ * @template TValue
+ * @param {TValue} [defaultValue] The default value. (`""`)
+ * @param {UseInputValueOptions<TValue> | number} options Options or delay in
+ * milliseconds.
+ * @returns {string[]}
+ *
+ * @example
+ *   // Basic usage
+ *   const [email, delayedEmail, onChangeEmail] = useInputValue();
+ *   React.useEffect(() => {
+ *     console.log("Delayed email changed: ", delayedEmail);
+ *   }, [delayedEmail]);
+ *   return <input onChange={onChangeEmail} value={email} />;
+ */
+export function useInputDebounced(defaultValue = "", options) {
+  let delay = 1000;
+  if (options) {
+    if (typeof options === "number") {
+      delay = options;
+      options = undefined;
+    } else if (options.delay) {
+      delay = options.delay;
+    }
+  }
+  const [value, onChange, setValue] = useInputValue(defaultValue, options);
+  const [debouncedValue, setDebouncedValue] = React.useState(defaultValue);
+
+  const onChangeDebounce = React.useCallback(
+    debounce(value => {
+      setDebouncedValue(value);
+    }, delay),
+    [setDebouncedValue],
+  );
+
+  React.useEffect(() => {
+    onChangeDebounce(value);
+  }, [value, onChangeDebounce]);
+
+  return [value, debouncedValue, onChange, setValue];
+}
+/**
  * Hook that returns an input value, `onChange` handler and a value setter.
  * @template TValue
  * @param {TValue} [defaultValue] The default value. (`""`)
@@ -290,6 +335,8 @@ export function useTimeout(handler, values = [], wait = 1000) {
 /**
  * @template TValue
  * @typedef UseInputValueOptions
+ * @property {number} [delay] Delay in milliseconds. Used when calling
+ * `useInputDebounced`. Default: `1000`.
  * @property {(value:TValue)=>any} [mapValue] Maps input value to state value.
  * May return `undefined` to cancel a change.
  * @property {number} [valueFromArg=0] Index of change handler argument to get value from.
