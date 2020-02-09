@@ -7,6 +7,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   //Typography
 } from "@material-ui/core";
 // Local
@@ -14,27 +15,50 @@ import {
   CheckCircleOutlineIcon,
   RadioButtonUncheckedIcon,
 } from "../../components";
-import { useOnMount } from "../../lib";
+import { Navigation, useInputDebounced, useOnMount } from "../../lib";
 import { connectView, uiLoading, todoItems, TodoActions } from "../../state";
 import { useMobile } from "../../themes";
 // import { useStyles } from "./TodoListPage.styles";
 
 function _TodoListPage({
   actions: { searchItems },
+  pageRoute: {
+    query: { title: titleFromQueryString = "" },
+  },
   todoItems,
   // uiLoading
 }) {
   // const classes = useStyles();
   const isMobile = useMobile();
 
+  const [titleFromInput, titleDelayed, onChangeTitle] = useInputDebounced(
+    titleFromQueryString,
+  );
+
+  React.useEffect(() => {
+    if (titleDelayed !== titleFromQueryString) {
+      Navigation.redirect(
+        "/todos" +
+          (titleDelayed ? "?title=" + encodeURIComponent(titleDelayed) : ""),
+      );
+      searchItems({ title: titleDelayed });
+    }
+  }, [titleDelayed, titleFromQueryString, searchItems]);
+
   useOnMount(() => {
-    searchItems();
+    searchItems({ title: titleFromQueryString });
   });
 
   return (
     <Grid container spacing={isMobile ? 0 : 3}>
       <Grid item xs={12}>
-        TODO: Toolbar with search box.
+        <div style={{ display: "flex" }}>
+          <TextField
+            label="Search"
+            value={titleFromInput}
+            onChange={onChangeTitle}
+          />
+        </div>
       </Grid>
       <Grid item xs={12}>
         <Box boxShadow={3}>
@@ -48,7 +72,7 @@ function _TodoListPage({
             </TableHead>
             <TableBody>
               {todoItems.map(item => (
-                <TableRow>
+                <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.title}</TableCell>
                   <TableCell>
