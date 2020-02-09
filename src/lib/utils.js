@@ -220,3 +220,12 @@ export function stringToHslColor(str, saturation, lightness) {
 export function stringToHslPastel(str) {
   return stringToHslColor(str, 30, 80);
 }
+/**
+ * Asynchronously waits for the given amount of time in `ms`.
+ * @param {number} [ms] Time to wait, in milliseconds.
+ */
+export function timeoutAsync(ms = 0) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+  });
+}
