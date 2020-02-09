@@ -44,6 +44,7 @@ export const TodoActions = {
   },
 
   searchItems({ title } = {}) {
+    console.log("Searching for Todo title: ", title);
     return async dispatch => {
       dispatch(UIActions.setUILoading(true));
 
