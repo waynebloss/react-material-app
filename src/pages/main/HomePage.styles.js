@@ -16,6 +16,6 @@ export const useStyles = makeStyles(
     },
   }),
   {
-    classNamePrefix: "DashboardPage",
+    classNamePrefix: "HomePage",
   },
 );
