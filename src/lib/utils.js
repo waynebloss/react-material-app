@@ -40,6 +40,18 @@ export function boolYesNo(bool) {
   return bool ? "yes" : "no";
 }
 /**
+ * Simple debounce function
+ * @param {Function} fn Function to call after the `delay`.
+ * @param {number} delay Time in milliseconds.
+ */
+export function debounce(fn, delay) {
+  let timeoutId;
+  return (...args) => {
+    clearInterval(timeoutId);
+    timeoutId = setTimeout(fn, delay, ...args);
+  };
+}
+/**
  * Converts a decimal percentage to an integer percentage.
  * @param {number} value
  */
