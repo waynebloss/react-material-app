@@ -44,9 +44,9 @@ const menuItems = [
     },
   },
   {
-    text: "Page 1",
+    text: "Todos",
     icon: HistoryIcon,
-    url: "/page-1",
+    url: "/todos",
   },
   {
     text: "Page 2",
