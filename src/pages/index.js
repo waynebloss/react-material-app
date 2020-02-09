@@ -1,6 +1,7 @@
 // import { DevArea } from "./dev";
 import { AuthArea } from "./auth";
 import { MainArea } from "./main";
+import { TodoArea } from "./todos";
 
 import { MainLayout } from "../layouts";
 
@@ -8,6 +9,7 @@ export const Pages = {
   // dev: DevArea,
   auth: AuthArea.pages,
   main: MainArea.pages,
+  todo: TodoArea.pages,
 };
 export default Pages;
 
@@ -16,6 +18,7 @@ export const AppArea = {
     // DevArea,
     AuthArea,
     MainArea,
+    TodoArea,
   ],
   layouts: {
     default: {
