@@ -9,7 +9,6 @@ import { TodoActions } from "./actions";
  *      { id: 2, title: "", done: false, },
  *      { id: 3, title: "", done: false, },
  *    ],
- *    nextId: 4, // Used to generate ids for demo. Normally done on server.
  * }
  */
 export const TodoState = {
@@ -17,9 +16,27 @@ export const TodoState = {
   persist: false,
   defaults: {
     items: [],
-    nextId: -1,
   },
   handlers: {
+    [TodoActions.type.TODO_ITEM_UPDATED](state, { item }) {
+      // #region NOTE: The need to copy the entire array and find an index
+      // is one reason why it's recommended to store lists as an object, e.g.
+      // items: {
+      //   1: {id:1,title:"",done:false},
+      //   2: {id:2,title:"",done:false},
+      //   3: {id:3,title:"",done:false},
+      // }
+      // And then store the sorted ids as an array, e.g.
+      // sortedItemIds: [3, 2, 1]
+      // #endregion
+      const items = [...state.items];
+      const index = items.findIndex(it => it.id === item.id);
+      items[index] = item;
+      return {
+        ...state,
+        items,
+      };
+    },
     [TodoActions.type.TODO_ITEMS_ADDED](state, { items }) {
       return {
         ...state,
@@ -31,12 +48,6 @@ export const TodoState = {
       return {
         ...state,
         items,
-      };
-    },
-    [TodoActions.type.TODO_NEXTID_SET](state, { nextId }) {
-      return {
-        ...state,
-        nextId,
       };
     },
   },
