@@ -30,51 +30,60 @@ import {
 import { REACT_APP_COMPANY_SITE_URL } from "../config";
 import { iOS } from "../device";
 import { Navigation } from "../lib";
+import Pages from "../pages";
 import { avatarInfo, connectView, userFullName } from "../state";
 import companyLogo from "../assets/img/company-logo_300x.png";
 import { useStyles } from "./MainMenu.styles";
 
-const menuItems = [
-  {
-    text: "Home",
-    icon: HomeIcon,
-    url: "/",
-    urlActiveIf: {
-      exact: true,
+function getMenuItems() {
+  const menuItems = [
+    {
+      text: "Home",
+      icon: HomeIcon,
+      url: Pages.main.home.path,
+      urlActiveIf: {
+        exact: true,
+      },
     },
-  },
-  {
-    text: "Todos",
-    icon: HistoryIcon,
-    url: "/todos",
-  },
-  {
-    text: "Page 2",
-    icon: SaveAltIcon,
-    url: "/page-2",
-  },
-  {
-    text: "Page 3",
-    icon: DescriptionIcon,
-    url: "/page-3",
-  },
-  {
-    text: "Logout",
-    icon: PowerSettingsIcon,
-    onClick() {
-      if (!window.confirm("Are you sure you want to log out?")) {
-        return;
-      }
-      Navigation.go("/auth/logout");
+    {
+      text: "Todos",
+      icon: HistoryIcon,
+      url: Pages.todo.list.path,
     },
-  },
-];
+    {
+      text: "Page 2",
+      icon: SaveAltIcon,
+      url: "/page-2",
+    },
+    {
+      text: "Page 3",
+      icon: DescriptionIcon,
+      url: "/page-3",
+    },
+    {
+      text: "Logout",
+      icon: PowerSettingsIcon,
+      onClick() {
+        if (!window.confirm("Are you sure you want to log out?")) {
+          return;
+        }
+        Navigation.go("/auth/logout");
+      },
+    },
+  ];
 
-const viewProfileItem = {
-  url: "/profile",
-};
+  const viewProfileItem = {
+    url: "/profile",
+  };
+
+  return {
+    menuItems,
+    viewProfileItem,
+  };
+}
 
 function _MainMenu({ avatarInfo, userFullName }) {
+  const { menuItems, viewProfileItem } = React.useMemo(getMenuItems);
   const classes = useStyles();
   // #region State
   /**
