@@ -19,7 +19,7 @@ export const useStyles = makeStyles(
     desktopSidebar: {
       display: "none",
       [theme.breakpoints.up("sm")]: {
-        backgroundColor: "navy",
+        backgroundColor: "#0B79A2",
         display: "block",
         flex: "0 0 auto",
         width: "30vw",

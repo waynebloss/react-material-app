@@ -35,7 +35,7 @@ import { avatarInfo, connectView, userFullName } from "../state";
 import companyLogo from "../assets/img/company-logo_300x.png";
 import { useStyles } from "./MainMenu.styles";
 
-function getMenuItems() {
+function getItems() {
   const menuItems = [
     {
       text: "Home",
@@ -83,13 +83,13 @@ function getMenuItems() {
 }
 
 function _MainMenu({ avatarInfo, userFullName }) {
-  const { menuItems, viewProfileItem } = React.useMemo(getMenuItems);
   const classes = useStyles();
   // #region State
   /**
    * - We use `setCurrentPath` only to cause a re-render, not reading it.
    */
   // #endregion
+  const { menuItems, viewProfileItem } = React.useMemo(getItems);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [, setCurrentPath] = React.useState(null);
   // #region Callbacks, Effects
