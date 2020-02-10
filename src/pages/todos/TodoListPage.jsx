@@ -2,6 +2,8 @@ import React from "react";
 import {
   Box,
   Button,
+  Checkbox,
+  FormControlLabel,
   Grid,
   IconButton,
   Table,
@@ -20,13 +22,22 @@ import {
   RadioButtonUncheckedIcon,
 } from "../../components";
 import { Navigation, useInputDebounced, useOnMount } from "../../lib";
-import { connectView, uiLoading, todoItems, TodoActions } from "../../state";
+import Pages from "../../pages";
+import {
+  connectView,
+  preferDialogEdit,
+  PrefActions,
+  uiLoading,
+  todoItems,
+  TodoActions,
+} from "../../state";
 import { useMobile } from "../../themes";
 import { EditTodoForm } from "./components/EditTodoForm";
 // import { useStyles } from "./TodoListPage.styles";
 
 function _TodoItem({
   actions: { editItemId, toggleItemDone },
+  dialogEdit,
   item: { id, title, done },
 }) {
   const onClickDone = React.useCallback(() => {
@@ -35,9 +46,13 @@ function _TodoItem({
 
   const onClickEditItem = React.useCallback(
     e => {
-      editItemId(id);
+      if (dialogEdit) {
+        editItemId(id);
+        return;
+      }
+      Navigation.go(Pages.todo.edit.path.replace(":id", id));
     },
-    [editItemId, id],
+    [dialogEdit, editItemId, id],
   );
 
   const editCellProps = {
@@ -62,10 +77,11 @@ function _TodoItem({
 const TodoItem = React.memo(_TodoItem);
 
 function _TodoListPage({
-  actions: { searchItems, toggleItemDone },
+  actions: { searchItems, toggleDialogEdit, toggleItemDone },
   pageRoute: {
     query: { title: titleFromQueryString = "" },
   },
+  preferDialogEdit: dialogEdit,
   todoItems,
   // uiLoading
 }) {
@@ -93,8 +109,12 @@ function _TodoListPage({
   }, []);
 
   const onClickAddItem = React.useCallback(() => {
-    editItemId(0);
-  }, []);
+    if (dialogEdit) {
+      editItemId(0);
+      return;
+    }
+    Navigation.go(Pages.todo.edit.path.replace(":id", 0));
+  }, [dialogEdit]);
 
   /** After editing item, close dialog. */
   const onItemUpdated = React.useCallback(() => {
@@ -105,7 +125,7 @@ function _TodoListPage({
   React.useEffect(() => {
     if (titleDelayed !== titleFromQueryString) {
       Navigation.redirect(
-        "/todos" +
+        Pages.todo.list.path +
           (titleDelayed ? "?title=" + encodeURIComponent(titleDelayed) : ""),
       );
       doSearch(titleDelayed);
@@ -140,6 +160,16 @@ function _TodoListPage({
           }}
         >
           <div style={{ display: "inline-block" }}>Click to edit an item.</div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={dialogEdit}
+                onChange={toggleDialogEdit}
+                value="dialogEdit"
+              />
+            }
+            label="Use dialog editor."
+          />
           <Button color="primary" onClick={onClickAddItem}>
             <AddIcon /> Add Item
           </Button>
@@ -159,6 +189,7 @@ function _TodoListPage({
                   <TodoItem
                     key={item.id}
                     actions={{ editItemId, toggleItemDone }}
+                    dialogEdit={dialogEdit}
                     item={item}
                   />
                 ))}
@@ -183,9 +214,10 @@ export const TodoListPage = connectView(
   _TodoListPage,
   state => {
     return {
+      ...preferDialogEdit(state),
       ...todoItems(state),
       ...uiLoading(state),
     };
   },
-  [TodoActions],
+  [TodoActions, PrefActions],
 );
