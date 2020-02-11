@@ -3,7 +3,7 @@
  * this file, instead of importing each individual thing in all of your files.
  */
 export { bindActionCreators, compose } from "redux";
-export { connect } from "react-redux";
+export { connect, useDispatch, useSelector } from "react-redux";
 // Local
 export * from "./states";
 export * from "./store";
