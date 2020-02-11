@@ -3,6 +3,6 @@ export function todoItems(state) {
     todo: { items },
   } = state;
   return {
-    todoItems: items,
+    items,
   };
 }

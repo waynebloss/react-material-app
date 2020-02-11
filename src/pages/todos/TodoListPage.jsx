@@ -24,25 +24,24 @@ import {
 import { Navigation, useInputDebounced, useOnMount } from "../../lib";
 import Pages from "../../pages";
 import {
-  connectView,
   preferDialogEdit,
   PrefActions,
-  uiLoading,
   todoItems,
   TodoActions,
+  useDispatch,
+  useSelector,
 } from "../../state";
 import { useMobile } from "../../themes";
 import { EditTodoForm } from "./components/EditTodoForm";
 // import { useStyles } from "./TodoListPage.styles";
 
-function _TodoItem({
-  actions: { editItemId, toggleItemDone },
-  dialogEdit,
-  item: { id, title, done },
-}) {
+function _TodoItem({ actions: { editItemId }, item: { id, title, done } }) {
+  const dialogEdit = useSelector(preferDialogEdit);
+  const dispatch = useDispatch();
+
   const onClickDone = React.useCallback(() => {
-    toggleItemDone(id);
-  }, [id, toggleItemDone]);
+    dispatch(TodoActions.toggleItemDone(id));
+  }, [id, dispatch]);
 
   const onClickEditItem = React.useCallback(
     e => {
@@ -77,16 +76,19 @@ function _TodoItem({
 const TodoItem = React.memo(_TodoItem);
 
 function _TodoListPage({
-  actions: { searchItems, toggleDialogEdit, toggleItemDone },
   pageRoute: {
     query: { title: titleFromQueryString = "" },
   },
-  preferDialogEdit: dialogEdit,
-  todoItems,
-  // uiLoading
 }) {
   // const classes = useStyles();
   const isMobile = useMobile();
+
+  const dialogEdit = useSelector(preferDialogEdit);
+  const { items } = useSelector(todoItems);
+  const dispatch = useDispatch();
+  const toggleDialogEdit = React.useCallback(() => {
+    dispatch(PrefActions.toggleDialogEdit());
+  }, [dispatch]);
 
   /** Item id being edited.
    * @type {[number|null,(id:number|null)=>void]} */
@@ -99,9 +101,9 @@ function _TodoListPage({
 
   const doSearch = React.useCallback(
     (title = titleFromQueryString) => {
-      searchItems({ title });
+      dispatch(TodoActions.searchItems({ title }));
     },
-    [searchItems, titleFromQueryString],
+    [dispatch, titleFromQueryString],
   );
 
   const onCancelEditingItem = React.useCallback(() => {
@@ -130,7 +132,7 @@ function _TodoListPage({
       );
       doSearch(titleDelayed);
     }
-  }, [titleDelayed, titleFromQueryString, doSearch, searchItems]);
+  }, [titleDelayed, titleFromQueryString, doSearch]);
 
   useOnMount(() => {
     doSearch();
@@ -185,10 +187,10 @@ function _TodoListPage({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {todoItems.map(item => (
+                {items.map(item => (
                   <TodoItem
                     key={item.id}
-                    actions={{ editItemId, toggleItemDone }}
+                    actions={{ editItemId }}
                     dialogEdit={dialogEdit}
                     item={item}
                   />
@@ -210,14 +212,4 @@ function _TodoListPage({
   );
 }
 
-export const TodoListPage = connectView(
-  _TodoListPage,
-  state => {
-    return {
-      ...preferDialogEdit(state),
-      ...todoItems(state),
-      ...uiLoading(state),
-    };
-  },
-  [TodoActions, PrefActions],
-);
+export const TodoListPage = React.memo(_TodoListPage);
