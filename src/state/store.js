@@ -9,6 +9,7 @@ import storage from "redux-persist/lib/storage";
 import { __DEV__, REACT_APP_PERSIST_KEY } from "../config";
 import appStates from "./states";
 
+const persistKey = REACT_APP_PERSIST_KEY || "app";
 
 // Map appState reducers.
 const reducerMap = (function mapStates() {
@@ -25,7 +26,6 @@ const reducerMap = (function mapStates() {
   const storageObject = (function preloadState() {
     // This is only possible since we're using localStorage which we can access
     // synchronously. It's simpler than using `redux-persist/PersistGate`.
-    const persistKey = REACT_APP_PERSIST_KEY || "app";
     const storageKey = `${KEY_PREFIX}${persistKey}`;
     const storageValue = localStorage.getItem(storageKey);
     return storageValue ? JSON.parse(storageValue) : undefined;
@@ -47,7 +47,7 @@ const reducerMap = (function mapStates() {
     if (shouldPurge && shouldPersist) {
       defaultPurgeKeys.push(name);
     }
-    reducers[name] = reducerSpec.reducer;
+    reducers[name] = appState.reducer;
   });
   return {
     defaultPurgeKeys,
