@@ -8,18 +8,14 @@ import {
 } from "@material-ui/core";
 // Local
 import { useInputCheck, useInputValue, useOnMount } from "../../../lib";
-import { connectView, TodoActions } from "../../../state";
+import { TodoActions, useDispatch } from "../../../state";
 import { useMobile } from "../../../themes";
 // import { useStyles } from "./EditTodoForm.styles";
 
-function _EditTodoForm({
-  actions: { getItemById, saveItem },
-  id,
-  onCancel,
-  onComplete,
-}) {
+function _EditTodoForm({ id, onCancel, onComplete }) {
   // const classes = useStyles();
   const isMobile = useMobile();
+  const dispatch = useDispatch();
 
   const [title, onChangeTitle, setTitle] = useInputValue();
   const [done, onChangeDone, setDone] = useInputCheck();
@@ -35,19 +31,21 @@ function _EditTodoForm({
         }));
         return;
       }
-      saveItem({
-        id,
-        title,
-        done,
-      });
+      dispatch(
+        TodoActions.saveItem({
+          id,
+          title,
+          done,
+        }),
+      );
       onComplete();
     },
-    [id, title, done, onComplete, saveItem],
+    [id, title, done, onComplete, dispatch],
   );
 
   useOnMount(() => {
     async function loadItem() {
-      const { item } = await getItemById(id);
+      const { item } = await dispatch(TodoActions.getItemById(id));
       setTitle(item.title);
       setDone(item.done);
     }
@@ -102,4 +100,4 @@ function _EditTodoForm({
   );
 }
 
-export const EditTodoForm = connectView(_EditTodoForm, [TodoActions]);
+export const EditTodoForm = React.memo(_EditTodoForm);
