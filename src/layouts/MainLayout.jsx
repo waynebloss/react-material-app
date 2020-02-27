@@ -14,27 +14,30 @@ import { useInstalledPWA } from "../lib";
 import { useMobile } from "../themes";
 import { MainMenu } from "./MainMenu";
 import { useStyles } from "./MainLayout.styles";
-import { connectView, uiLoading, uiNotification, UIActions } from "../state";
+import { UIActions, UISelectors, useDispatch, useSelector } from "../state";
 
-function _MainLayout({
-  actions: { hideNotification, showNotification },
-  children,
-  uiLoading,
-  uiNotification,
-}) {
+function _MainLayout({ children }) {
+  const dispatch = useDispatch();
+  const uiLoading = useSelector(UISelectors.loading);
+  const uiNotification = useSelector(UISelectors.notification);
   const isInstalled = useInstalledPWA();
   const isMobile = useMobile();
   const classes = useStyles();
   const onClickInstallApp = React.useCallback(
     e => {
       e.preventDefault();
-      showNotification(
-        "To install the app, click the Share button, scroll down and tap " +
-          "Add to Home Screen",
+      dispatch(
+        UIActions.showNotification(
+          "To install the app, click the Share button, scroll down and tap " +
+            "Add to Home Screen",
+        ),
       );
     },
-    [showNotification],
+    [dispatch],
   );
+  const hideNotification = React.useCallback(() => {
+    dispatch(UIActions.hideNotification());
+  }, [dispatch]);
   return (
     <>
       <Container maxWidth="xl">
@@ -88,11 +91,4 @@ function _MainLayout({
     </>
   );
 }
-export const MainLayout = connectView(
-  _MainLayout,
-  state => ({
-    ...uiLoading(state),
-    ...uiNotification(state),
-  }),
-  [UIActions],
-);
+export const MainLayout = React.memo(_MainLayout);

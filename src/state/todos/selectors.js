@@ -1,8 +1,5 @@
-export function todoItems(state) {
-  const {
-    todo: { items },
-  } = state;
-  return {
-    items,
-  };
-}
+export const TodoSelectors = {
+  items(state) {
+    return state.todo?.items ?? [];
+  },
+};

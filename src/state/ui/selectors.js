@@ -1,17 +1,8 @@
-export function uiLoading(state) {
-  const {
-    ui: { loading },
-  } = state;
-  return {
-    uiLoading: loading,
-  };
-}
-
-export function uiNotification(state) {
-  const {
-    ui: { notification },
-  } = state;
-  return {
-    uiNotification: notification,
-  };
-}
+export const UISelectors = {
+  loading(state) {
+    return state.ui.loading;
+  },
+  notification(state) {
+    return state.ui.notification;
+  },
+};

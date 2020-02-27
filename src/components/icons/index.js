@@ -5,77 +5,45 @@
  */
 
 // Material-UI
-import AddIcon from "@material-ui/icons/Add";
-import AlternateEmailIcon from "@material-ui/icons/AlternateEmail";
+export { default as AddIcon } from "@material-ui/icons/Add";
+export { default as AlternateEmailIcon } from "@material-ui/icons/AlternateEmail";
 
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import CloseIcon from "@material-ui/icons/Close";
+export { default as CheckCircleOutlineIcon } from "@material-ui/icons/CheckCircleOutline";
+export { default as ChevronRightIcon } from "@material-ui/icons/ChevronRight";
+export { default as CloseIcon } from "@material-ui/icons/Close";
 
-import DeleteIcon from "@material-ui/icons/Delete";
-import DescriptionIcon from "@material-ui/icons/Description";
-import DownloadIcon from "@material-ui/icons/GetApp";
-import DocumentIcon from "@material-ui/icons/InsertDriveFileTwoTone";
-import DoneIcon from "@material-ui/icons/Done";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+export { default as DeleteIcon } from "@material-ui/icons/Delete";
+export { default as DescriptionIcon } from "@material-ui/icons/Description";
+export { default as DownloadIcon } from "@material-ui/icons/GetApp";
+export { default as DocumentIcon } from "@material-ui/icons/InsertDriveFileTwoTone";
+export { default as DoneIcon } from "@material-ui/icons/Done";
+export { default as DragIndicatorIcon } from "@material-ui/icons/DragIndicator";
 
-import EditIcon from "@material-ui/icons/Edit";
-import ErrorIcon from "@material-ui/icons/Error";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+export { default as EditIcon } from "@material-ui/icons/Edit";
+export { default as ErrorIcon } from "@material-ui/icons/Error";
+export { default as ExpandMoreIcon } from "@material-ui/icons/ExpandMore";
 
-import FilterListIcon from "@material-ui/icons/FilterList";
-import FolderIcon from "@material-ui/icons/Folder";
+export { default as FilterListIcon } from "@material-ui/icons/FilterList";
+export { default as FolderIcon } from "@material-ui/icons/Folder";
 
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+export { default as KeyboardArrowLeft } from "@material-ui/icons/KeyboardArrowLeft";
+export { default as KeyboardArrowRight } from "@material-ui/icons/KeyboardArrowRight";
 
-import HelpIcon from "@material-ui/icons/Help";
-import HistoryIcon from "@material-ui/icons/History";
-import HomeIcon from "@material-ui/icons/Home";
+export { default as HelpIcon } from "@material-ui/icons/Help";
+export { default as HistoryIcon } from "@material-ui/icons/History";
+export { default as HomeIcon } from "@material-ui/icons/Home";
 
-import LabelIcon from "@material-ui/icons/Label";
+export { default as LabelIcon } from "@material-ui/icons/Label";
 
-import MenuIcon from "@material-ui/icons/Menu";
+export { default as MenuIcon } from "@material-ui/icons/Menu";
 
-import PowerSettingsIcon from "@material-ui/icons/PowerSettingsNew";
+export { default as PowerSettingsIcon } from "@material-ui/icons/PowerSettingsNew";
 
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+export { default as RadioButtonUncheckedIcon } from "@material-ui/icons/RadioButtonUnchecked";
 
-import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+export { default as SaveAltIcon } from "@material-ui/icons/SaveAlt";
+export { default as VisibilityIcon } from "@material-ui/icons/Visibility";
+export { default as VisibilityOffIcon } from "@material-ui/icons/VisibilityOff";
 
 // Local
-// import CustomIcon from "./CustomIcon";
-
-export {
-  AddIcon,
-  AlternateEmailIcon,
-  CheckCircleOutlineIcon,
-  ChevronRightIcon,
-  CloseIcon,
-  // CustomIcon,
-  DeleteIcon,
-  DescriptionIcon,
-  DownloadIcon,
-  DocumentIcon,
-  DoneIcon,
-  DragIndicatorIcon,
-  EditIcon,
-  ErrorIcon,
-  ExpandMoreIcon,
-  FilterListIcon,
-  FolderIcon,
-  HelpIcon,
-  HistoryIcon,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-  LabelIcon,
-  HomeIcon,
-  MenuIcon,
-  PowerSettingsIcon,
-  RadioButtonUncheckedIcon,
-  SaveAltIcon,
-  VisibilityIcon,
-  VisibilityOffIcon,
-};
+// export { default as CustomIcon } from "./CustomIcon";
