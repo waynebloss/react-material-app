@@ -31,7 +31,7 @@ import { REACT_APP_COMPANY_SITE_URL } from "../config";
 import { iOS } from "../device";
 import { Navigation } from "../lib";
 import Pages from "../pages";
-import { avatarInfo, connectView, userFullName } from "../state";
+import { AuthSelectors, useSelector } from "../state";
 import companyLogo from "../assets/img/company-logo_300x.png";
 import { useStyles } from "./MainMenu.styles";
 
@@ -82,7 +82,9 @@ function getItems() {
   };
 }
 
-function _MainMenu({ avatarInfo, userFullName }) {
+function _MainMenu() {
+  const avatarInfo = useSelector(AuthSelectors.avatarInfo);
+  const userFullName = useSelector(AuthSelectors.userFullName);
   const classes = useStyles();
   // #region State
   /**
@@ -271,7 +273,4 @@ function _MainMenu({ avatarInfo, userFullName }) {
   );
 }
 
-export const MainMenu = connectView(_MainMenu, state => ({
-  ...userFullName(state),
-  ...avatarInfo(state),
-}));
+export const MainMenu = React.memo(_MainMenu);

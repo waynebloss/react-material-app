@@ -24,10 +24,10 @@ import {
 import { Navigation, useInputDebounced, useOnMount } from "../../lib";
 import Pages from "../../pages";
 import {
-  preferDialogEdit,
   PrefActions,
-  todoItems,
+  PrefSelectors,
   TodoActions,
+  TodoSelectors,
   useDispatch,
   useSelector,
 } from "../../state";
@@ -36,7 +36,7 @@ import { EditTodoForm } from "./components/EditTodoForm";
 // import { useStyles } from "./TodoListPage.styles";
 
 function _TodoItem({ actions: { editItemId }, item: { id, title, done } }) {
-  const dialogEdit = useSelector(preferDialogEdit);
+  const dialogEdit = useSelector(PrefSelectors.dialogEdit);
   const dispatch = useDispatch();
 
   const onClickDone = React.useCallback(() => {
@@ -83,8 +83,8 @@ function _TodoListPage({
   // const classes = useStyles();
   const isMobile = useMobile();
 
-  const dialogEdit = useSelector(preferDialogEdit);
-  const { items } = useSelector(todoItems);
+  const dialogEdit = useSelector(PrefSelectors.dialogEdit);
+  const items = useSelector(TodoSelectors.items);
   const dispatch = useDispatch();
   const toggleDialogEdit = React.useCallback(() => {
     dispatch(PrefActions.toggleDialogEdit());

@@ -1,11 +1,12 @@
 import React from "react";
 // Local
 import { useOnMount } from "../../lib";
-import { connectView, AuthActions } from "../../state";
+import { AuthActions, useDispatch } from "../../state";
 
-function _LogoutPage({ actions: { logout } }) {
+function _LogoutPage() {
+  const dispatch = useDispatch();
   async function logoutAndRedirect() {
-    await logout();
+    await dispatch(AuthActions.logout());
     window.location.replace("/auth/login");
   }
 
@@ -15,4 +16,4 @@ function _LogoutPage({ actions: { logout } }) {
   return <h2>Logging out...</h2>;
 }
 
-export const LogoutPage = connectView(_LogoutPage, [AuthActions]);
+export const LogoutPage = React.memo(_LogoutPage);

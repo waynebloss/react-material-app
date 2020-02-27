@@ -1,6 +1,5 @@
-export function preferDialogEdit(state) {
-  const {
-    prefs: { dialogEdit },
-  } = state;
-  return !!dialogEdit;
-}
+export const PrefSelectors = {
+  dialogEdit(state) {
+    return !!state.prefs?.dialogEdit;
+  },
+};

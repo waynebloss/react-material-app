@@ -4,16 +4,16 @@ import { Button, Grid, TextField, Typography } from "@material-ui/core";
 import { MuiPageLink } from "../../components";
 import { useInputValue } from "../../lib";
 import Pages from "../../pages";
-import { AuthActions, connectView } from "../../state";
+import { AuthActions, useDispatch } from "../../state";
 import { useMobile } from "../../themes";
 import { useStyles } from "./ForgotPasswordPage.styles";
 
 function _ForgotPasswordPage({
-  actions: { forgotPassword },
   pageRoute: {
     query: { expiredEmail = "" },
   },
 }) {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = React.useState(
     expiredEmail
@@ -29,7 +29,7 @@ function _ForgotPasswordPage({
   async function onClickSubmit(e) {
     e.preventDefault();
     setErrorMessage("");
-    const result = await forgotPassword({ email });
+    const result = await dispatch(AuthActions.forgotPassword({ email }));
     if (!result.error) {
       setEmailSent(true);
     } else {
@@ -112,6 +112,4 @@ function _ForgotPasswordPage({
   );
 }
 
-export const ForgotPasswordPage = connectView(_ForgotPasswordPage, [
-  AuthActions,
-]);
+export const ForgotPasswordPage = React.memo(_ForgotPasswordPage);

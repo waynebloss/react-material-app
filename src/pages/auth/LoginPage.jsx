@@ -15,18 +15,23 @@ import {
   VisibilityIcon,
 } from "../../components";
 import { hasAuthRequestToken, useInputValue, useOnMount } from "../../lib";
-import { connectView, AuthActions, uiLoading } from "../../state";
+import {
+  AuthActions,
+  UISelectors,
+  useDispatch,
+  useSelector,
+} from "../../state";
 import Pages from "../../pages";
 import { useMobile } from "../../themes";
 import { useStyles } from "./LoginPage.styles";
 
 function _LoginPage({
-  actions: { login },
   pageRoute: {
     query: { after: navigateAfterLoginURL, reset },
   },
-  uiLoading,
 }) {
+  const dispatch = useDispatch();
+  const uiLoading = useSelector(UISelectors.loading);
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [email, onChangeEmail] = useInputValue();
@@ -60,7 +65,7 @@ function _LoginPage({
   async function onClickLogin(e) {
     e.preventDefault();
     setErrorMessage("");
-    const result = await login({ email, password });
+    const result = await dispatch(AuthActions.login({ email, password }));
     if (!result.error) {
       navigateAfterLogin();
     } else {
@@ -176,4 +181,4 @@ function _LoginPage({
   );
 }
 
-export const LoginPage = connectView(_LoginPage, uiLoading, [AuthActions]);
+export const LoginPage = React.memo(_LoginPage);

@@ -15,17 +15,17 @@ import {
   useOnMount,
 } from "../../lib";
 import Pages from "../../pages";
-import { AuthActions, connectView } from "../../state";
+import { AuthActions, useDispatch } from "../../state";
 import { useMobile } from "../../themes";
 import { useStyles } from "./ResetPasswordPage.styles";
 
 function _ResetPasswordPage({
-  actions: { confirmAccount, resetPassword },
   pageRoute: {
     location: { pathname },
     query: { email, token },
   },
 }) {
+  const dispatch = useDispatch();
   const confirming = Pages.auth.confirmAccount.path === pathname;
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -67,13 +67,17 @@ function _ResetPasswordPage({
       return;
     }
     setErrorMessage("");
-    const doAction = confirming ? confirmAccount : resetPassword;
-    const result = await doAction({
-      email,
-      token,
-      password1,
-      password2,
-    });
+    const doAction = confirming
+      ? AuthActions.confirmAccount
+      : AuthActions.resetPassword;
+    const result = await dispatch(
+      doAction({
+        email,
+        token,
+        password1,
+        password2,
+      }),
+    );
     if (!result.error) {
       Navigation.go(Pages.auth.login.path + "?reset=true");
     } else if (hasInvalidTokenError(result.error)) {
@@ -191,4 +195,4 @@ function _ResetPasswordPage({
   );
 }
 
-export const ResetPasswordPage = connectView(_ResetPasswordPage, [AuthActions]);
+export const ResetPasswordPage = React.memo(_ResetPasswordPage);

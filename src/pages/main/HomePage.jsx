@@ -1,20 +1,18 @@
 import React from "react";
 import { Box, Grid, Typography } from "@material-ui/core";
 // Local
-import { connectView, uiLoading, userFirstName } from "../../state";
+import { AuthSelectors, useSelector } from "../../state";
 import { useMobile } from "../../themes";
 import { useStyles } from "./HomePage.styles";
 
-function _HomePage({
-  // actions: { getHomePageData },
-  userFirstName,
-  uiLoading,
-}) {
+function _HomePage() {
+  // const dispatch = useDispatch();
+  const userFirstName = useSelector(AuthSelectors.userFirstName);
   const classes = useStyles();
   const isMobile = useMobile();
 
   // useOnMount(() => {
-  //   getHomePageData();
+  //   dispatch(SomeActions.getHomePageData());
   // });
 
   return (
@@ -33,13 +31,4 @@ function _HomePage({
   );
 }
 
-export const HomePage = connectView(
-  _HomePage,
-  state => {
-    return {
-      ...userFirstName(state),
-      ...uiLoading(state),
-    };
-  },
-  // [HomePageActions],
-);
+export const HomePage = React.memo(_HomePage);
